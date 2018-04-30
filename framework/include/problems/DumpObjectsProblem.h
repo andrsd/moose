@@ -25,6 +25,7 @@ class DumpObjectsProblem : public FEProblemBase
 {
 public:
   DumpObjectsProblem(const InputParameters & parameters);
+  virtual ~DumpObjectsProblem();
 
   void addVariable(const std::string & var_name,
                    const FEType & type,

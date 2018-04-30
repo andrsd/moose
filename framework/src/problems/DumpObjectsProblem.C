@@ -36,6 +36,11 @@ DumpObjectsProblem::DumpObjectsProblem(const InputParameters & parameters) : FEP
   newAssemblyArray(*_nl_sys);
 }
 
+DumpObjectsProblem::~DumpObjectsProblem()
+{
+  FEProblemBase::deleteAssemblyArray();
+}
+
 void
 DumpObjectsProblem::addVariable(const std::string & var_name,
                                 const FEType & type,

@@ -88,6 +88,11 @@ protected:
   /// True if displaced mesh is used for the target mesh, otherwise false
   bool _displaced_target_mesh;
 
+  /// Relative bounding box inflation
+  Real _inflation;
+  /// Additional padding added to the bounding box, useful for 1D meshes
+  Point _bounding_box_padding;
+
   /**
    * Return the bounding boxes of all the "from" domains, including all the
    * domains not local to this processor.

@@ -47,6 +47,13 @@ validParams<MultiAppTransfer>()
   params.addParam<bool>("displaced_target_mesh",
                         false,
                         "Whether or not to use the displaced mesh for the target mesh.");
+  params.addParam<Real>("bounding_box_inflation",
+                        0.0,
+                        "Relative amount to 'inflate' the bounding box of this MultiApp.");
+  params.addParam<Point>("bounding_box_padding",
+                         RealVectorValue(),
+                         "Additional padding added to the dimensions of the bounding box. The "
+                         "values are added to the x, y and z dimension respectively.");
 
   return params;
 }
@@ -56,7 +63,9 @@ MultiAppTransfer::MultiAppTransfer(const InputParameters & parameters)
     _multi_app(_fe_problem.getMultiApp(getParam<MultiAppName>("multi_app"))),
     _direction(getParam<MooseEnum>("direction")),
     _displaced_source_mesh(getParam<bool>("displaced_source_mesh")),
-    _displaced_target_mesh(getParam<bool>("displaced_target_mesh"))
+    _displaced_target_mesh(getParam<bool>("displaced_target_mesh")),
+    _inflation(getParam<Real>("bounding_box_inflation")),
+    _bounding_box_padding(getParam<Point>("bounding_box_padding"))
 {
   bool check = getParam<bool>("check_multiapp_execute_on");
   if (check && (getExecuteOnEnum() != _multi_app->getExecuteOnEnum()))
@@ -159,13 +168,22 @@ MultiAppTransfer::getFromBoundingBoxes()
     // processor.
     BoundingBox bbox = MeshTools::create_local_bounding_box(*_from_meshes[i]);
 
+    Point min = bbox.min();
+    min -= _bounding_box_padding;
+    Point max = bbox.max();
+    max += _bounding_box_padding;
+
+    Point inflation_amount = (max - min) * _inflation;
+    min -= inflation_amount;
+    max += inflation_amount;
+
     // Translate the bounding box to the from domain's position.
-    bbox.first += _from_positions[i];
-    bbox.second += _from_positions[i];
+    min += _from_positions[i];
+    max += _from_positions[i];
 
     // Cast the bounding box into a pair of points (so it can be put through
     // MPI communication).
-    bb_points[i] = static_cast<std::pair<Point, Point>>(bbox);
+    bb_points[i] = std::pair<Point, Point>(min, max);
   }
 
   // Serialize the bounding box points.

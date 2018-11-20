@@ -13,6 +13,7 @@
 #include "ThreadedElementLoop.h"
 
 #include "libmesh/elem_range.h"
+#include "libmesh/error_vector.h"
 
 class AuxiliarySystem;
 class Adaptivity;
@@ -35,7 +36,9 @@ protected:
   const std::map<std::string, std::unique_ptr<ErrorVector>> & _indicator_field_to_error_vector;
   AuxiliarySystem & _aux_sys;
   unsigned int _system_number;
+#ifdef LIBMESH_ENABLE_AMR
   Adaptivity & _adaptivity;
+#endif
   NumericVector<Number> & _solution;
 
   std::map<unsigned int, ErrorVector *> _indicator_field_number_to_error_vector;

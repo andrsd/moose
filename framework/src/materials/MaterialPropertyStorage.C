@@ -84,6 +84,7 @@ MaterialPropertyStorage::releaseProperties()
       j.second.destroy();
 }
 
+#ifdef LIBMESH_ENABLE_AMR
 void
 MaterialPropertyStorage::prolongStatefulProps(
     const std::vector<std::vector<QpMap>> & refinement_map,
@@ -158,6 +159,21 @@ MaterialPropertyStorage::prolongStatefulProps(
     }
   }
 }
+#else
+void
+MaterialPropertyStorage::prolongStatefulProps(
+    const std::vector<std::vector<QpMap>> &,
+    QBase &,
+    QBase &,
+    MaterialPropertyStorage &,
+    MaterialData &,
+    const Elem &,
+    const int,
+    const int,
+    const int)
+{
+}
+#endif
 
 void
 MaterialPropertyStorage::restrictStatefulProps(

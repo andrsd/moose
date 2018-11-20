@@ -316,6 +316,7 @@ DiracKernel::addPointWithValidId(Point p, unsigned id)
         break; // out of while loop
       }
 
+#ifdef LIBMESH_ENABLE_AMR
       // Is the Elem not active (been refined) but still contains the point?
       // Then search in its active children and update the caches.
       else if (!active && contains_point)
@@ -344,6 +345,7 @@ DiracKernel::addPointWithValidId(Point p, unsigned id)
 
         break; // out of while loop
       }
+#endif
 
       else if (
           // Is the Elem active but the point is not contained in it any

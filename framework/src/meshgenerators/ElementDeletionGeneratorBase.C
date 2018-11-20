@@ -223,7 +223,9 @@ ElementDeletionGeneratorBase::generate()
    * For now, we'll call contract and notify the SetupMeshComplete
    * Action that we need to re-prepare the mesh.
    */
+#ifdef LIBMESH_ENABLE_AMR
   mesh->contract();
+#endif
   mesh->prepare_for_use();
 
   return dynamic_pointer_cast<MeshBase>(mesh);

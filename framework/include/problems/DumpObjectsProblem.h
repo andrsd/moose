@@ -96,7 +96,9 @@ public:
   virtual void onTimestepEnd() override {}
   virtual void computeIndicators() override {}
   virtual void computeMarkers() override {}
+#ifdef LIBMESH_ENABLE_AMR
   virtual bool adaptMesh() override { return false; }
+#endif
   virtual void addLineSearch(const InputParameters & /*parameters*/) override {}
 
 protected:

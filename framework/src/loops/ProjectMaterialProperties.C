@@ -141,6 +141,7 @@ ProjectMaterialProperties::onBoundary(const Elem * elem, unsigned int side, Boun
   }
 }
 
+#ifdef LIBMESH_ENABLE_AMR
 void
 ProjectMaterialProperties::onInternalSide(const Elem * elem, unsigned int /*side*/)
 {
@@ -173,6 +174,12 @@ ProjectMaterialProperties::onInternalSide(const Elem * elem, unsigned int /*side
     }
   }
 }
+#else
+void
+ProjectMaterialProperties::onInternalSide(const Elem *, unsigned int)
+{
+}
+#endif
 
 void
 ProjectMaterialProperties::join(const ProjectMaterialProperties & /*y*/)

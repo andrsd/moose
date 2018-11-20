@@ -224,6 +224,8 @@ ElementDeleterBase::modify()
    * For now, we'll call contract and notify the SetupMeshComplete
    * Action that we need to re-prepare the mesh.
    */
+#ifdef LIBMESH_ENABLE_AMR
   mesh.contract();
+#endif
   _mesh_ptr->needsPrepareForUse();
 }

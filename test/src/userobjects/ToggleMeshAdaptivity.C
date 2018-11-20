@@ -36,10 +36,12 @@ ToggleMeshAdaptivity::ToggleMeshAdaptivity(const InputParameters & params)
 void
 ToggleMeshAdaptivity::checkState()
 {
+#ifdef LIBMESH_ENABLE_AMR
   if (_state == "on")
     _fe_problem.adaptivity().setAdaptivityOn(true);
   else
     _fe_problem.adaptivity().setAdaptivityOn(false);
+#endif
 }
 
 void

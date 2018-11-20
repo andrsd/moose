@@ -33,6 +33,7 @@ typedef MooseVariableFE<Real> MooseVariable;
 typedef MooseVariableFE<VectorValue<Real>> VectorMooseVariable;
 class Marker;
 class Adaptivity;
+#include "libmesh/error_vector.h"
 
 template <>
 InputParameters validParams<Marker>();
@@ -105,7 +106,9 @@ protected:
 
   SubProblem & _subproblem;
   FEProblemBase & _fe_problem;
+#ifdef LIBMESH_ENABLE_AMR
   Adaptivity & _adaptivity;
+#endif
   SystemBase & _sys;
 
   THREAD_ID _tid;

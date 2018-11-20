@@ -29,5 +29,9 @@ NumAdaptivityCycles::NumAdaptivityCycles(const InputParameters & parameters)
 Real
 NumAdaptivityCycles::getValue()
 {
+#ifdef LIBMESH_ENABLE_AMR
   return _fe_problem.getNumCyclesCompleted();
+#else
+  return 0;
+#endif
 }

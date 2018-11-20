@@ -88,7 +88,9 @@ Steady::execute()
     if (!lastSolveConverged())
     {
       _console << "Aborting as solve did not converge\n";
+#ifdef LIBMESH_ENABLE_AMR
       break;
+#endif
     }
 
     _problem.onTimestepEnd();

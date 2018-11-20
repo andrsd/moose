@@ -1807,6 +1807,7 @@ MooseMesh::mapPoints(const std::vector<Point> & from,
   }
 }
 
+#ifdef LIBMESH_ENABLE_AMR
 void
 MooseMesh::findAdaptivityQpMaps(const Elem * template_elem,
                                 QBase & qrule,
@@ -1944,6 +1945,19 @@ MooseMesh::findAdaptivityQpMaps(const Elem * template_elem,
     }
   }
 }
+#else
+void
+MooseMesh::findAdaptivityQpMaps(const Elem *,
+                                QBase &,
+                                QBase &,
+                                std::vector<std::vector<QpMap>> &,
+                                std::vector<std::pair<unsigned int, QpMap>> &,
+                                int,
+                                int,
+                                int)
+{
+}
+#endif
 
 void
 MooseMesh::changeBoundaryId(const boundary_id_type old_id,

@@ -26,7 +26,9 @@ UpdateErrorVectorsThread::UpdateErrorVectorsThread(
     _indicator_field_to_error_vector(indicator_field_to_error_vector),
     _aux_sys(fe_problem.getAuxiliarySystem()),
     _system_number(_aux_sys.number()),
+#ifdef LIBMESH_ENABLE_AMR
     _adaptivity(fe_problem.adaptivity()),
+#endif
     _solution(_aux_sys.solution())
 {
   // Build up this map once so we don't have to do these lookups over and over again
@@ -44,12 +46,15 @@ UpdateErrorVectorsThread::UpdateErrorVectorsThread(UpdateErrorVectorsThread & x,
     _indicator_field_to_error_vector(x._indicator_field_to_error_vector),
     _aux_sys(x._aux_sys),
     _system_number(x._system_number),
+#ifdef LIBMESH_ENABLE_AMR
     _adaptivity(x._adaptivity),
+#endif
     _solution(x._solution),
     _indicator_field_number_to_error_vector(x._indicator_field_number_to_error_vector)
 {
 }
 
+#ifdef LIBMESH_ENABLE_AMR
 void
 UpdateErrorVectorsThread::onElement(const Elem * elem)
 {
@@ -63,6 +68,12 @@ UpdateErrorVectorsThread::onElement(const Elem * elem)
     ev[elem->id()] = value;
   }
 }
+#else
+void
+UpdateErrorVectorsThread::onElement(const Elem *)
+{
+}
+#endif
 
 void
 UpdateErrorVectorsThread::join(const UpdateErrorVectorsThread & /*y*/)

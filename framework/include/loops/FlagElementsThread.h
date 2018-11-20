@@ -15,7 +15,9 @@
 #include "libmesh/elem_range.h"
 
 class AuxiliarySystem;
+#ifdef LIBMESH_ENABLE_AMR
 class Adaptivity;
+#endif
 class DisplacedProblem;
 
 class FlagElementsThread : public ThreadedElementLoop<ConstElemRange>
@@ -38,7 +40,9 @@ protected:
   std::shared_ptr<DisplacedProblem> _displaced_problem;
   AuxiliarySystem & _aux_sys;
   unsigned int _system_number;
+#ifdef LIBMESH_ENABLE_AMR
   Adaptivity & _adaptivity;
+#endif
   MooseVariableFEBase & _field_var;
   unsigned int _field_var_number;
   std::vector<Number> & _serialized_solution;

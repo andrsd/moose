@@ -63,6 +63,7 @@ SetupMeshCompleteAction::act()
       return;
     _app.executeMeshModifiers();
   }
+#ifdef LIBMESH_ENABLE_AMR
   else if (_current_task == "uniform_refine_mesh")
   {
     // we don't need to run mesh modifiers *again* after they ran already during the mesh
@@ -89,6 +90,7 @@ SetupMeshCompleteAction::act()
       }
     }
   }
+#endif
   else
   {
     // Prepare the mesh (may occur multiple times)

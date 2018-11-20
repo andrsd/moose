@@ -24,6 +24,7 @@ CacheChangedListsThread::CacheChangedListsThread(CacheChangedListsThread & x, Th
 
 CacheChangedListsThread::~CacheChangedListsThread() {}
 
+#ifdef LIBMESH_ENABLE_AMR
 void
 CacheChangedListsThread::onElement(const Elem * elem)
 {
@@ -44,7 +45,14 @@ CacheChangedListsThread::onElement(const Elem * elem)
     }
   }
 }
+#else
+void
+CacheChangedListsThread::onElement(const Elem *)
+{
+}
+#endif
 
+#ifdef LIBMESH_ENABLE_AMR
 void
 CacheChangedListsThread::join(const CacheChangedListsThread & y)
 {
@@ -55,3 +63,9 @@ CacheChangedListsThread::join(const CacheChangedListsThread & y)
   _coarsened_element_children.insert(y._coarsened_element_children.begin(),
                                      y._coarsened_element_children.end());
 }
+#else
+void
+CacheChangedListsThread::join(const CacheChangedListsThread &)
+{
+}
+#endif

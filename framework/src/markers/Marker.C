@@ -44,7 +44,9 @@ Marker::Marker(const InputParameters & parameters)
     OutputInterface(parameters),
     _subproblem(*getCheckedPointerParam<SubProblem *>("_subproblem")),
     _fe_problem(*getCheckedPointerParam<FEProblemBase *>("_fe_problem_base")),
+#ifdef LIBMESH_ENABLE_AMR
     _adaptivity(_fe_problem.adaptivity()),
+#endif
     _sys(*getCheckedPointerParam<SystemBase *>("_sys")),
     _tid(parameters.get<THREAD_ID>("_tid")),
     _assembly(_subproblem.assembly(_tid)),
@@ -73,11 +75,20 @@ Marker::computeMarker()
   _field_var.setNodalValue(mark);
 }
 
+#ifdef LIBMESH_ENABLE_AMR
 ErrorVector &
 Marker::getErrorVector(std::string indicator)
 {
   return _adaptivity.getErrorVector(indicator);
 }
+#else
+ErrorVector &
+Marker::getErrorVector(std::string)
+{
+  static ErrorVector dummy;
+  return dummy;
+}
+#endif
 
 const MooseArray<Real> &
 Marker::getMarkerValue(std::string name)

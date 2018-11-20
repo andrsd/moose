@@ -31,7 +31,9 @@ FlagElementsThread::FlagElementsThread(FEProblemBase & fe_problem,
     _displaced_problem(_fe_problem.getDisplacedProblem()),
     _aux_sys(fe_problem.getAuxiliarySystem()),
     _system_number(_aux_sys.number()),
+#ifdef LIBMESH_ENABLE_AMR
     _adaptivity(_fe_problem.adaptivity()),
+#endif
     _field_var(_fe_problem.getVariable(
         0, marker_name, Moose::VarKindType::VAR_ANY, Moose::VarFieldType::VAR_FIELD_ANY)),
     _field_var_number(_field_var.number()),
@@ -47,7 +49,9 @@ FlagElementsThread::FlagElementsThread(FlagElementsThread & x, Threads::split sp
     _displaced_problem(x._displaced_problem),
     _aux_sys(x._aux_sys),
     _system_number(x._system_number),
+#ifdef LIBMESH_ENABLE_AMR
     _adaptivity(x._adaptivity),
+#endif
     _field_var(x._field_var),
     _field_var_number(x._field_var_number),
     _serialized_solution(x._serialized_solution),
@@ -55,6 +59,7 @@ FlagElementsThread::FlagElementsThread(FlagElementsThread & x, Threads::split sp
 {
 }
 
+#ifdef LIBMESH_ENABLE_AMR
 void
 FlagElementsThread::onElement(const Elem * elem)
 {
@@ -89,6 +94,12 @@ FlagElementsThread::onElement(const Elem * elem)
         .elemPtr(elem->id())
         ->set_refinement_flag((Elem::RefinementState)marker_value);
 }
+#else
+void
+FlagElementsThread::onElement(const Elem *)
+{
+}
+#endif
 
 void
 FlagElementsThread::join(const FlagElementsThread & /*y*/)

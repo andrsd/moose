@@ -598,6 +598,7 @@ FEProblemBase::initialSetup()
     }
   }
 
+#ifdef LIBMESH_ENABLE_AMR
   // Build Refinement and Coarsening maps for stateful material projections if necessary
   if (_adaptivity.isOn() &&
       (_material_props.hasStatefulProperties() || _bnd_material_props.hasStatefulProperties() ||
@@ -608,9 +609,11 @@ FEProblemBase::initialSetup()
 
     _mesh.buildRefinementAndCoarseningMaps(_assembly[0].get());
   }
+#endif
 
   if (!_app.isRecovering())
   {
+#ifdef LIBMESH_ENABLE_AMR
     /**
      * If we are not recovering but we are doing restart (_app_setFileRestart() == true) with
      * additional uniform refinements. We have to delay the refinement until this point
@@ -624,6 +627,7 @@ FEProblemBase::initialSetup()
 
       adaptivity().uniformRefineWithProjection();
     }
+#endif
   }
 
   // Do this just in case things have been done to the mesh
@@ -2973,6 +2977,7 @@ FEProblemBase::computeIndicators()
 void
 FEProblemBase::computeMarkers()
 {
+#ifdef LIBMESH_ENABLE_AMR
   if (_markers.hasActiveObjects())
   {
     TIME_SECTION(_compute_markers_timer);
@@ -3001,6 +3006,7 @@ FEProblemBase::computeMarkers()
     _aux->solution().close();
     _aux->update();
   }
+#endif
 }
 
 const ExecFlagType &

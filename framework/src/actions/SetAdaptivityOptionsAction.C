@@ -52,6 +52,7 @@ SetAdaptivityOptionsAction::SetAdaptivityOptionsAction(InputParameters params) :
 void
 SetAdaptivityOptionsAction::act()
 {
+#ifdef LIBMESH_ENABLE_AMR
   Adaptivity & adapt = _problem->adaptivity();
 
   if (isParamValid("marker"))
@@ -69,4 +70,5 @@ SetAdaptivityOptionsAction::act()
   adapt.setTimeActive(getParam<Real>("start_time"), getParam<Real>("stop_time"));
 
   adapt.setRecomputeMarkersFlag(getParam<bool>("recompute_markers_during_cycles"));
+#endif
 }

@@ -1229,8 +1229,10 @@ XFEM::cutMeshWithEFA(NonlinearSystemBase & nl, AuxiliarySystem & aux)
       }
     }
 
+#ifdef LIBMESH_ENABLE_AMR
     libmesh_elem->set_p_level(parent_elem->p_level());
     libmesh_elem->set_p_refinement_flag(parent_elem->p_refinement_flag());
+#endif
     _mesh->add_elem(libmesh_elem);
     libmesh_elem->set_n_systems(parent_elem->n_systems());
     libmesh_elem->subdomain_id() = parent_elem->subdomain_id();
@@ -1309,8 +1311,10 @@ XFEM::cutMeshWithEFA(NonlinearSystemBase & nl, AuxiliarySystem & aux)
 
     if (_displaced_mesh)
     {
+#ifdef LIBMESH_ENABLE_AMR
       libmesh_elem2->set_p_level(parent_elem2->p_level());
       libmesh_elem2->set_p_refinement_flag(parent_elem2->p_refinement_flag());
+#endif
       _displaced_mesh->add_elem(libmesh_elem2);
       libmesh_elem2->set_n_systems(parent_elem2->n_systems());
       libmesh_elem2->subdomain_id() = parent_elem2->subdomain_id();

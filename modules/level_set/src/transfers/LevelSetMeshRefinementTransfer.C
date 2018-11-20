@@ -46,6 +46,7 @@ LevelSetMeshRefinementTransfer::LevelSetMeshRefinementTransfer(const InputParame
 void
 LevelSetMeshRefinementTransfer::initialSetup()
 {
+#ifdef LIBMESH_ENABLE_AMR
   FEProblemBase & from_problem = _multi_app->problemBase();
   for (unsigned int i = 0; i < _multi_app->numGlobalApps(); i++)
     if (_multi_app->hasLocalApp(i))
@@ -60,6 +61,7 @@ LevelSetMeshRefinementTransfer::initialSetup()
       adapt.setMaxHLevel(from_problem.adaptivity().getMaxHLevel());
       adapt.setAdaptivityOn(false);
     }
+#endif
 }
 
 void
@@ -73,11 +75,13 @@ LevelSetMeshRefinementTransfer::execute()
     for (unsigned int i = 0; i < _multi_app->numGlobalApps(); i++)
       if (_multi_app->hasLocalApp(i))
       {
+#ifdef LIBMESH_ENABLE_AMR
         FEProblemBase & to_problem = _multi_app->appProblemBase(i);
         Adaptivity & adapt = to_problem.adaptivity();
         adapt.setAdaptivityOn(true);
         to_problem.adaptMesh();
         adapt.setAdaptivityOn(false);
+#endif
       }
   }
 }

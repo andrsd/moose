@@ -36,6 +36,7 @@ LevelSetProblem::computeMarkers()
   setCurrentExecuteOnFlag(EXEC_NONE);
 }
 
+#ifdef LIBMESH_ENABLE_AMR
 bool
 LevelSetProblem::adaptMesh()
 {
@@ -45,3 +46,4 @@ LevelSetProblem::adaptMesh()
   setCurrentExecuteOnFlag(EXEC_NONE);
   return adapt;
 }
+#endif

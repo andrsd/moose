@@ -143,18 +143,28 @@ PolycrystalICTools::buildGrainAdjacencyMatrix(
     return buildNodalGrainAdjacencyMatrix(entity_to_grain, mesh, pb, n_grains);
 }
 
+#ifdef LIBMESH_ENABLE_AMR
 PolycrystalICTools::AdjacencyMatrix<Real>
 PolycrystalICTools::buildElementalGrainAdjacencyMatrix(
     const std::map<dof_id_type, unsigned int> & element_to_grain,
     MooseMesh & mesh,
     const PeriodicBoundaries * pb,
     unsigned int n_grains)
+#else
+PolycrystalICTools::AdjacencyMatrix<Real>
+PolycrystalICTools::buildElementalGrainAdjacencyMatrix(
+    const std::map<dof_id_type, unsigned int> &,
+    MooseMesh & mesh,
+    const PeriodicBoundaries *,
+    unsigned int n_grains)
+#endif
 {
   AdjacencyMatrix<Real> adjacency_matrix(n_grains);
 
   // We can't call this in the constructor, it appears that _mesh_ptr is always NULL there.
   mesh.errorIfDistributedMesh("advanced_op_assignment = true");
 
+#ifdef LIBMESH_ENABLE_AMR
   std::vector<const Elem *> all_active_neighbors;
 
   std::vector<std::set<dof_id_type>> local_ids(n_grains);
@@ -263,6 +273,7 @@ PolycrystalICTools::buildElementalGrainAdjacencyMatrix(
         adjacency_matrix(j, i) = 1.;
       }
     }
+#endif
 
   return adjacency_matrix;
 }
@@ -369,6 +380,7 @@ PolycrystalICTools::coloringAlgorithmDescriptions()
 /**
  * Utility routines
  */
+#ifdef LIBMESH_ENABLE_AMR
 void
 visitElementalNeighbors(const Elem * elem,
                         const MeshBase & mesh,
@@ -398,6 +410,17 @@ visitElementalNeighbors(const Elem * elem,
     if (*neighbor_it)
       halo_ids.insert((*neighbor_it)->id());
 }
+#else
+void
+visitElementalNeighbors(const Elem *,
+                        const MeshBase &,
+                        const PointLocatorBase &,
+                        const PeriodicBoundaries *,
+                        std::set<dof_id_type> &)
+{
+}
+#endif
+
 
 /**
  * Backtracking graph coloring routines

@@ -1508,7 +1508,9 @@ FeatureFloodCount::visitElementalNeighbors(const Elem * elem,
       if (neighbor_ancestor == libMesh::remote_elem)
         continue;
 
+#ifdef LIBMESH_ENABLE_AMR
       neighbor_ancestor->active_family_tree_by_neighbor(all_active_neighbors, elem, false);
+#endif
     }
     else
     {
@@ -1523,9 +1525,10 @@ FeatureFloodCount::visitElementalNeighbors(const Elem * elem,
        */
       if (neighbor_ancestor)
       {
+#ifdef LIBMESH_ENABLE_AMR
         neighbor_ancestor->active_family_tree_by_topological_neighbor(
             all_active_neighbors, elem, mesh, *_point_locator, _pbs, false);
-
+#endif
         topological_neighbor = true;
       }
       else

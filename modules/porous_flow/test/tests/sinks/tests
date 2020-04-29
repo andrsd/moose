@@ -160,6 +160,16 @@
     issues = '#7333'
     design = 'porous_flow/tests/sinks/sinks_tests.md porous_flow/boundaries.md porous_flow/doc/tests/sinks.tex'
   [../]
+  [./s11]
+    type = Exodiff
+    input = s11.i
+    exodiff = s11.e
+    threading = '!pthreads'
+    requirement = 'PorousFlow shall be able to inject fluid at user specified temperature using.'
+    design = 'PorousFlowEnthalpySink.md'
+    issues = '#15742'
+    design = 'PorousFlowEnthalpySink.md'
+  [../]
   [./injection_production_eg]
     type = 'CSVDiff'
     input = 'injection_production_eg.i'

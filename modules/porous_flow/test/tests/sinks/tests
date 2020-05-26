@@ -168,7 +168,25 @@
     requirement = 'PorousFlow shall be able to inject fluid at user specified temperature using.'
     design = 'PorousFlowEnthalpySink.md'
     issues = '#15742'
-    design = 'PorousFlowEnthalpySink.md'
+  [../]
+  [./s11_act]
+    type = Exodiff
+    input = s11_act.i
+    exodiff = s11.e
+    threading = '!pthreads'
+    requirement = 'PorousFlow shall be able to setup fluid injection at user specified temperature using a simplified syntax.'
+    issues = '#15742'
+    design = 'PorousFlowEnthalpySink.md PorousFlowSinkBC.md'
+  [../]
+  [./s11_act_too_many_vars]
+    type = RunException
+    input = s11_act.i
+    threading = '!pthreads'
+    cli_args = 'Variables/pp1/initial_condition=3 Kernels/td_pp1/type=TimeDerivative Kernels/td_pp1/variable=pp1 UserObjects/dictator/porous_flow_vars="pp pp1 temp"'
+    expect_err = "Number of porous flow variables in simulation is '3', but this BC can be used only with pressure and temperature."
+    requirement = 'PorousFlow shall be report an error when incorrect number of variables is used when using a simplified enthalpy sink BC syntax.'
+    issues = '#15742'
+    design = 'PorousFlowEnthalpySink.md PorousFlowSinkBC.md'
   [../]
   [./injection_production_eg]
     type = 'CSVDiff'

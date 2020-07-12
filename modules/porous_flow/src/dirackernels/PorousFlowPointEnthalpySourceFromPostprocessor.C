@@ -51,6 +51,11 @@ Real
 PorousFlowPointEnthalpySourceFromPostprocessor::computeQpResidual()
 {
   // Negative sign to make a positive mass_flux in the input file a source
-  Real h = _fp.h_from_p_T(_pressure[_qp], _T_in);
-  return -_test[_i][_qp] * _mass_flux * h;
+  if (_mass_flux > 0)
+  {
+    Real h = _fp.h_from_p_T(_pressure[_qp], _T_in);
+    return -_test[_i][_qp] * _mass_flux * h;
+  }
+  else
+    return 0.;
 }
